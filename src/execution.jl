@@ -88,9 +88,10 @@ end
 # Note that trials executed via `run` and `lineartrial` are always executed at top-level
 # scope, in order to allow transfer of locally-scoped variables into benchmark scope.
 
-function _run(b::Benchmark, p::Parameters; verbose = false, pad = "", kwargs...)
+function _run(b::Benchmark, p::Parameters; verbose=false, pad="", warmup=false, kwargs...)
     params = Parameters(p; kwargs...)
     @assert params.seconds > 0.0 "time limit must be greater than 0.0"
+    warmup && BenchmarkTools.warmup(b)
     params.gctrial && gcscrub()
     start_time = Base.time()
     trial = Trial(params)
